@@ -103,6 +103,7 @@
 </body>
 </html> -->
 
+<!--
 <!DOCTYPE html>
 <html>
 <head>
@@ -115,3 +116,51 @@
 	</a>
 </body>
 </html>
+-->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Listar Ficheiros de /posts</title>
+</head>
+<body>
+    <h1>Lista de Posts</h1>
+    <div id="posts"></div>
+
+    <script>
+        async function loadPosts() {
+            try {
+                const response = await fetch('/posts/');
+                const text = await response.text();
+
+                // Criar um elemento temporário para extrair os links
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = text;
+
+                // Encontrar todos os links dentro do HTML retornado
+                const links = tempDiv.querySelectorAll('a');
+
+                const postsDiv = document.getElementById('posts');
+
+                links.forEach(link => {
+                    const fileName = link.getAttribute('href');
+                    if (fileName !== "../") { // Ignorar o link "voltar"
+                        const postLink = document.createElement('a');
+                        postLink.href = `/posts/${fileName}`;
+                        postLink.textContent = fileName;
+                        postLink.style.display = "block"; // Para aparecer um abaixo do outro
+                        postsDiv.appendChild(postLink);
+                    }
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar os posts:", error);
+            }
+        }
+
+        loadPosts();
+    </script>
+</body>
+</html>
+
